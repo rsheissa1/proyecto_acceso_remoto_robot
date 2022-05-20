@@ -1,7 +1,7 @@
 # Proyecto de acceso remoto para prácticas con aplicación a un brazo robótico en modo cooperativo
 
 - Repositorio dedicado al desarrollo del proyecto capstone. 
-- Curso Iot del Samsung Innovation Campus.
+- Curso **Iot** del **Samsung Innovation Campus**.
 
 Colaboradores
 1. Dr. José Alfonso Domínguez Chávez
