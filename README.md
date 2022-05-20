@@ -2,6 +2,6 @@
 Repositorio dedicado al desarrollo del proyecto capstone. Dentro del curso Iot del Samsung Innovation Campus.
 
 Colaboradores
-Dr. José Alfonso Domínguez Chávez
-Dr. Agustín Gallardo del Ángel
-Dr. Roberto Castañeda Sheissa
+1. Dr. José Alfonso Domínguez Chávez
+2. Dr. Agustín Gallardo del Ángel
+3. Dr. Roberto Castañeda Sheissa
