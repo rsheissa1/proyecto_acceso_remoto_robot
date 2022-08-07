@@ -55,7 +55,7 @@ while True:
 
 
     client = mqtt.Client("rob2") # Crea una nueva instancia
-    client.connect(mqttBroker, 1883, keepalive=25) # Conexta al broker (IP del cliente)
+    client.connect(mqttBroker) # Conexta al broker (IP del cliente)
 
     client.loop_start() # Inicia el ciclo
 
