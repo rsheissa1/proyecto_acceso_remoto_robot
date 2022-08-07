@@ -1,4 +1,4 @@
-# Códigos en phyton para suscribirse al brokery recibir las tramas que son enviadas a los brazos robot
+# Códigos en phyton para suscribirse al broker y recibir las tramas que son enviadas a los brazos robot
 # Ejecutar un script por cada robot cambiando el nombre de cada cliente de manera que no existan duplicados
 
 - Curso **Iot** del **Samsung Innovation Campus**.
