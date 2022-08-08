@@ -16,11 +16,11 @@
  int step_servo1, step_servo2, step_servo3, step_servo4, step_servo5, step_servo6, movimientos;
  // Posiciones iniciales para los servos
  int ms1=1200;
- int ms2=1200;
+ int ms2=1600;
  int ms3=1200;
  int ms4=1200;
- int ms5=1200;
- int ms6=1200;
+ int ms5=1300;
+ int ms6=0000;
 
  // Crea los objetos para control de los servos
  Servo servo1;  
