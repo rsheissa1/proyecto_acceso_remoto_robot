@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QProcess>
 #include <QMqttClient>
+#include <QtMqtt/QMqttMessage>
+#include <QTcpSocket>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -19,6 +21,7 @@ public:
     QProcess *cvlc_cam1;
     QProcess *cvlc_cam2;
     QProcess *motoresPy;
+    QProcess *motoresPy2;
     QString texto(int a);
 
 public slots:
@@ -31,10 +34,15 @@ public slots:
     void datosRecibido3();
     void iniciado3();
     void Error_proc3();
+    void datosRecibido4();
+    void iniciado4();
+    void Error_proc4();
+    void salir();
 
 private:
     Ui::MainWindow *ui;
     QMqttClient *cliente;
+    QMqttClient *cliente_sub;
 
 private slots:
     void estadoCambiado();

@@ -14,7 +14,7 @@
  * Habilita 2 webcams y envía el streaming por RTSP usando
  * la plataforma VLC.
  * Ejecuta el script de Python para recibir las posiciones
- * en ms de los motors de dos brazos robots.
+ * (en milisegundos) de los motors de dos brazos robots.
  */
 
 MainWindow::MainWindow(QWidget *parent)
@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    connect(ui->pushButton,SIGNAL(clicked()),this,SLOT(salir()));
 
     QString ip;
     QString programa;
@@ -57,15 +59,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     cvlc_cam2->start(programa,cam2);
 
-    /*QString program = "cvlc";
-    QStringList arguments;
-    arguments << "rtsp://192.168.5.158:1234/live";
-
-    //QProcess *myProcess = new QProcess(parent);
-    cvlc1->start(program, arguments);*/
-
     cliente = new QMqttClient(this);
-    cliente->setHostname("148.226.18.64");//localhost");
+    cliente->setHostname(ui->linea_IP->text().remove(0,4));//localhost");
+    //cliente->setHostname("broker.hivemq.com");
+    //cliente->setHostname("mqtt.flespi.io.org");
     cliente->setPort(1883);
 
     connect(cliente,&QMqttClient::stateChanged,this,&MainWindow::estadoCambiado);
@@ -76,12 +73,23 @@ MainWindow::MainWindow(QWidget *parent)
     QString programaPy;
     QStringList argsPy;
     programaPy.append("python3");
-    argsPy<<"RemoteArm_v_2_1.py";
+    argsPy<<"Final1.py"<<"&";
     motoresPy = new QProcess(this);
     connect(motoresPy,SIGNAL(readyReadStandardOutput()),this,SLOT(datosRecibido3()));
     connect(motoresPy,SIGNAL(readyReadStandardError()),this,SLOT(Error_proc3()));
     connect(motoresPy,SIGNAL(started()),this,SLOT(iniciado3()));
     motoresPy->start(programaPy,argsPy);
+
+    QString programaPy2;
+    QStringList argsPy2;
+    programaPy2.append("python3");
+    argsPy2<<"Final2.py"<<"&";
+    motoresPy2 = new QProcess(this);
+    connect(motoresPy2,SIGNAL(readyReadStandardOutput()),this,SLOT(datosRecibido4()));
+    connect(motoresPy2,SIGNAL(readyReadStandardError()),this,SLOT(Error_proc4()));
+    connect(motoresPy2,SIGNAL(started()),this,SLOT(iniciado4()));
+    motoresPy2->start(programaPy2,argsPy2);
+
 }
 
 MainWindow::~MainWindow()
@@ -91,19 +99,21 @@ MainWindow::~MainWindow()
 
 QString MainWindow::texto(int a)
 {
+    QString mensaje1;
     switch (a) {
     case 0:
-       return "Desconectado";
+        mensaje1="Desconectado";
         break;
     case 1:
-       return "Conectando...";
+       mensaje1="Conectando...";
         break;
     case 2:
-       return "Conectado";
+       mensaje1="Conectado";
         break;
     default:
         break;
     }
+    return mensaje1;
 }
 
 void MainWindow::datosRecibido1()
@@ -113,7 +123,7 @@ void MainWindow::datosRecibido1()
 
 void MainWindow::iniciado1()
 {
-    qDebug()<<"programa1: "<<cvlc_cam1->program()<<"    proceso:"<<cvlc_cam1->processId();
+    qDebug()<<"programa 1 (camara 1): "<<cvlc_cam1->program()<<"    proceso:"<<cvlc_cam1->processId();
 }
 
 void MainWindow::Error_proc1()
@@ -128,7 +138,7 @@ void MainWindow::datosRecibido2()
 
 void MainWindow::iniciado2()
 {
-    qDebug()<<"programa2: "<<cvlc_cam1->program()<<"    proceso:"<<cvlc_cam2->processId();
+    qDebug()<<"programa 2 (camara 2): "<<cvlc_cam1->program()<<"    proceso:"<<cvlc_cam2->processId();
 }
 
 void MainWindow::Error_proc2()
@@ -138,17 +148,41 @@ void MainWindow::Error_proc2()
 
 void MainWindow::datosRecibido3()
 {
-    ui->py_show->append(motoresPy->readAllStandardOutput());
+    ui->py_show_A->append(motoresPy->readAllStandardOutput());
 }
 
 void MainWindow::iniciado3()
 {
-    qDebug()<<"programa2: "<<motoresPy->program()<<"    proceso:"<<motoresPy->processId();
+    qDebug()<<"programa 3 (robot 1): "<<motoresPy->program()<<"    proceso:"<<motoresPy->processId();
 }
 
 void MainWindow::Error_proc3()
 {
-    ui->py_show->append(motoresPy->readAllStandardError());
+    ui->py_show_A->append(motoresPy->readAllStandardError());
+}
+
+void MainWindow::datosRecibido4()
+{
+    ui->py_show_B->append(motoresPy2->readAllStandardOutput());
+}
+
+void MainWindow::iniciado4()
+{
+    qDebug()<<"programa 4 (robot 2): "<<motoresPy2->program()<<"    proceso:"<<motoresPy2->processId();
+}
+
+void MainWindow::Error_proc4()
+{
+    ui->py_show_B->append(motoresPy2->readAllStandardError());
+}
+
+void MainWindow::salir()
+{
+    cvlc_cam1->kill();
+    cvlc_cam2->kill();
+    motoresPy->kill();
+    motoresPy2->kill();
+    close();
 }
 
 void MainWindow::estadoCambiado()
@@ -169,8 +203,9 @@ void MainWindow::brokerConectado()
     QString topic;
     QString mensaje;
 
-    topic="/uv/lab1/test1";//servidor1";
-    mensaje=ui->linea_IP->text().remove(0,4)+",8554/live"+",8555/live";   //"hola mundo";
+    //topic="/uv/lab1/test1";//servidor1";
+    topic="/uv/lab1/rob1";
+    mensaje=ui->linea_IP->text().remove(0,4)+":8554/live,"+ui->linea_IP->text().remove(0,4)+":8555/live";   //"hola mundo";
 
     if (cliente->publish(topic,mensaje.toUtf8()) == -1)
         QMessageBox::critical(this, QLatin1String("Error"), QLatin1String("No es posible enviar el mensaje./nIntente nuevamente"));
