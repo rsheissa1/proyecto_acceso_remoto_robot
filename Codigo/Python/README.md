@@ -17,3 +17,18 @@ para convertir el diseño Qt (formato XML) a Python, el nuevo archivo se identif
 Las operaciones que puede desarrollar la aplicación se encuentran en el archivo **garra_halcon_gui.py**.
 
 Además de librerías Qt, se hace uso de la librearía Paho, la cual es una API para MOSQUITTO.
+
+## Comunicación MQTT con Arduino
+
+El directorio **Interprete_mensajes_control** contiene código Phyton que permite suscribirse a un broker y recibir 
+tramas enviadas a los brazos robot.
+
+Se ejecuta un script por cada robot, cambiando el nombre de cada cliente con el fin de evitar duplicados.
+
+Código traído a ustedes por Three Broketers Team
+
+Dr. José Alfonso Domínguez Chávez
+Dr. Agustín Gallardo del Ángel
+Dr. Roberto Castañeda Sheissa
+
+[Basado](https://www.digi.com/resources/documentation/Digidocs/90001541/reference/r_example_subscribe_mqtt.htm) en el trabajo de © 2022 Digi International Inc.
